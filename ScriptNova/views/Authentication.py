@@ -6,7 +6,7 @@ from django.core.validators import validate_email
 from django.core.exceptions import ValidationError
 from django.db import IntegrityError
 from django.contrib.auth.hashers import check_password , make_password
-from ScriptNova import settings
+from django.conf import settings
 from ..models import User
 from ScriptNova.middleware.auth import require_token
 import hashlib
