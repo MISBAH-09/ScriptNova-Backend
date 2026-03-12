@@ -8,8 +8,8 @@ from functools import wraps
 class AuthenticationMiddleware(MiddlewareMixin):
 
   EXEMPT_URLS = [
-    '/signup',
-    '/login',
+    '/api/signup/',
+    '/api/login/',
     '/admin',
   ]
   
