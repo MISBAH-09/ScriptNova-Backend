@@ -85,11 +85,11 @@ class AuthenticationMiddleware(MiddlewareMixin):
         request.auth_user = None
 
         if token:
-            print(f"Checking token: {token}")  # Debug log
+            # print(f"Checking token: {token}")  # Debug log
             try:
                 user = User.objects.get(token=token)
                 request.auth_user = user
-                print(f"Found user: {user}")  # Debug log
+                # print(f"Found user: {user}")  # Debug log
             except User.DoesNotExist:
                 print("User not found")  # Debug log
 
