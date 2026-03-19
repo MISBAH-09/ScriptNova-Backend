@@ -85,50 +85,15 @@ class AuthenticationMiddleware(MiddlewareMixin):
         request.auth_user = None
 
         if token:
-            # print(f"Checking token: {token}")  # Debug log
+            print(f"Checking token: {token}")  # Debug log
             try:
                 user = User.objects.get(token=token)
                 request.auth_user = user
-                # print(f"Found user: {user}")  # Debug log
+                print(f"Found user: {user}")  # Debug log
             except User.DoesNotExist:
                 print("User not found")  # Debug log
 
         return None
-
-
-# class AuthenticationMiddleware(MiddlewareMixin):
-#     EXEMPT_URLS = [
-#         '/api/signup/',
-#         '/api/login/',
-#         '/admin',
-#     ]
-
-#     def process_request(self, request):
-#         # Skip exempt URLs
-#         if any(request.path.startswith(url) for url in self.EXEMPT_URLS):
-#             return None
-
-#         auth_header = request.META.get('HTTP_AUTHORIZATION', '')
-#         token = None
-
-#         if auth_header.startswith('Bearer '):
-#             token = auth_header[7:].strip()
-#         elif auth_header:
-#             token = auth_header.strip()
-
-#         request.auth_user = None
-
-#         if token:
-#             print(f"Checking token: {token}")  # Debugging log
-#             try:
-#                 user = User.objects.get(token=token)
-#                 request.auth_user = user
-#                 print(f"Found user: {user}")  # Debugging log
-#             except User.DoesNotExist:
-#                 print("User not found")  # Debugging log
-
-#         return None
-
 
 def require_token(view_func):
     @wraps(view_func)
