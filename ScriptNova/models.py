@@ -24,6 +24,7 @@ class Blog(models.Model):
     prompt            = models.CharField(max_length=500, blank=True, default='')
     title             = models.CharField(max_length=500)
     content           = models.TextField()
+    humanized_content = models.TextField(blank=True, default='')  # stores humanized version
     keywords          = models.CharField(max_length=1000, blank=True, default='')
     tone              = models.CharField(max_length=100, blank=True, default='')
     length_preference = models.CharField(max_length=100, blank=True, default='')

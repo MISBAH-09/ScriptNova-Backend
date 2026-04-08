@@ -2,6 +2,7 @@ from django.urls import path
 from ScriptNova.views import signupAPI, loginAPI, getByIdApi, updateAPI
 from ScriptNova.views.Blogs import (
     GenerateBlog, GenerateKeywords, RegenerateTitle, RephraseBlog,
+    HumanizeView,
     BlogListCreateView, BlogDetailView, BlogBySlugView,
     BlogFavouriteView, BlogStatsView,
 )
@@ -16,16 +17,16 @@ urlpatterns = [
     path('user/update/',     updateAPI.as_view(),  name='update-user'),
 
     # ── AI Generation ─────────────────────────────────────────────────────────
-    path('generate-blog/',      GenerateBlog.as_view(),      name='generate-blog'),
-    path('generate-keywords/',  GenerateKeywords.as_view(),  name='generate-keywords'),
-    path('generate-title/',     RegenerateTitle.as_view(),   name='generate-title'),
-    path('rephrase-blog/',      RephraseBlog.as_view(),      name='rephrase-blog'),
+    path('generate-blog/',      GenerateBlog.as_view(),     name='generate-blog'),
+    path('generate-keywords/',  GenerateKeywords.as_view(), name='generate-keywords'),
+    path('generate-title/',     RegenerateTitle.as_view(),  name='generate-title'),
+    path('rephrase-blog/',      RephraseBlog.as_view(),     name='rephrase-blog'),
+    path('humanize/',           HumanizeView.as_view(),     name='humanize'),
 
     # ── Blog CRUD ─────────────────────────────────────────────────────────────
-    # NOTE: named paths (stats/, slug/) must come BEFORE <int:pk>/ and <slug>/
-    path('blogs/',                      BlogListCreateView.as_view(), name='blog-list-create'),
-    path('blogs/stats/',                BlogStatsView.as_view(),      name='blog-stats'),
-    path('blogs/slug/<slug:slug>/',     BlogBySlugView.as_view(),     name='blog-by-slug'),
-    path('blogs/<int:pk>/',             BlogDetailView.as_view(),     name='blog-detail'),
-    path('blogs/<int:pk>/favourite/',   BlogFavouriteView.as_view(),  name='blog-favourite'),
+    path('blogs/',                    BlogListCreateView.as_view(), name='blog-list-create'),
+    path('blogs/stats/',              BlogStatsView.as_view(),      name='blog-stats'),
+    path('blogs/slug/<slug:slug>/',   BlogBySlugView.as_view(),     name='blog-by-slug'),
+    path('blogs/<int:pk>/',           BlogDetailView.as_view(),     name='blog-detail'),
+    path('blogs/<int:pk>/favourite/', BlogFavouriteView.as_view(),  name='blog-favourite'),
 ]
