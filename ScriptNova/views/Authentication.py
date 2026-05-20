@@ -285,6 +285,8 @@ class getByIdApi(APIView):
         'first_name': user.first_name,
         'last_name': user.last_name,
         'profile': user.profile,
+        'plan': user.plan,
+        'subscription_status': user.stripe_subscription_status,
         'token': user.token,
         'created_at': user.created_at.isoformat(),
         'updated_at': user.updated_at.isoformat()
@@ -416,6 +418,8 @@ class updateAPI(APIView):
       'first_name': user.first_name,
       'last_name': user.last_name,
       'profile': user.profile,
+      'plan': user.plan,
+      'subscription_status': user.stripe_subscription_status,
       'created_at': user.created_at.isoformat(),
       'updated_at': user.updated_at.isoformat()
     }

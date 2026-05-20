@@ -10,6 +10,10 @@ class User(models.Model):
     last_name = models.CharField(max_length=20)
     token = models.CharField(max_length=200, null=True, blank=True)
     profile = models.CharField(max_length=100, null=True, blank=True)
+    plan = models.CharField(max_length=20, default='free')
+    stripe_customer_id = models.CharField(max_length=255, null=True, blank=True)
+    stripe_subscription_id = models.CharField(max_length=255, null=True, blank=True)
+    stripe_subscription_status = models.CharField(max_length=50, null=True, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 

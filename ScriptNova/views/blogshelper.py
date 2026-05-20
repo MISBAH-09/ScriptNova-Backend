@@ -4,12 +4,7 @@ import requests
 import random
 
 # ── API KEYS ───────────────────────────────────────────────────────────────
-NVIDIA_API_KEY = os.getenv("NVIDIA_API_KEY")
-INVOKE_URL = "https://integrate.api.nvidia.com/v1/chat/completions"
-nvidia_headers = {
-    "Authorization": f"Bearer {NVIDIA_API_KEY}",
-    "Content-Type": "application/json"
-}
+INVOKE_URL = os.getenv("INVOKE_URL", "https://integrate.api.nvidia.com/v1/chat/completions")
 
 GROK_API_KEY = os.getenv("GROK_API_KEY")
 GROK_URL = "https://api.groq.com/openai/v1/chat/completions"
@@ -33,6 +28,17 @@ LENGTH_MAP = {
 
 # ── NVIDIA CHAT HELPER ────────────────────────────────────────────────────
 def _nvidia_chat(prompt_text, model=QUALITY_MODEL, max_tokens=300, temperature=0.6, timeout=300):
+    nvidia_api_key = os.getenv("NVIDIA_API_KEY")
+    if not nvidia_api_key or nvidia_api_key.strip().lower() in {"none", "null", "your-key", "nvapi-your-key"}:
+        raise RuntimeError(
+            "NVIDIA_API_KEY is missing. Add a valid NVIDIA NIM API key to "
+            "Backend/ScriptNova-Backend/.env, then restart the backend server."
+        )
+
+    headers = {
+        "Authorization": f"Bearer {nvidia_api_key.strip()}",
+        "Content-Type": "application/json"
+    }
     payload = {
         "model": model,
         "messages": [{"role": "user", "content": prompt_text}],
@@ -43,14 +49,19 @@ def _nvidia_chat(prompt_text, model=QUALITY_MODEL, max_tokens=300, temperature=0
     last_error = None
     for attempt in range(3):
         try:
-            r = requests.post(INVOKE_URL, headers=nvidia_headers, json=payload, timeout=timeout)
+            r = requests.post(INVOKE_URL, headers=headers, json=payload, timeout=timeout)
             r.raise_for_status()
             return r.json()["choices"][0]["message"]["content"]
         except (requests.exceptions.Timeout, requests.exceptions.ConnectionError) as e:
             last_error = e
             if attempt < 2:
                 time.sleep(3 * (attempt + 1))
-        except requests.exceptions.HTTPError:
+        except requests.exceptions.HTTPError as e:
+            if e.response is not None and e.response.status_code == 401:
+                raise RuntimeError(
+                    "NVIDIA rejected the API key. Check NVIDIA_API_KEY in "
+                    "Backend/ScriptNova-Backend/.env and restart the backend server."
+                ) from e
             raise
     raise last_error
 
